@@ -1,8 +1,6 @@
 # Hubriding WordPress Plugin
 Welcome to the **Hubriding** WordPress Plugin! This plugin is developed by **Wera AS**. Hubriding plugin adds unique PHP functions specifically designed to work with content created using **Advanced Custom Fields (ACF) Pro**.
 
-[![Wera AS](https://wera.no/logo.png)](https://wera.no/)
-
 ## ⚠️ Important Note
 This plugin is exclusively designed for use on [hubriding.no](https://hubriding.no) and **will not function** on any other site.
 
