@@ -17,7 +17,7 @@ function Hub_frontpage_template()
 		'taxonomy'    => 'kjøretøy',
 		'numberposts' => -1,
 		'orderby'     => 'count',
-		'order'       => 'DESC',
+		'order'       => 'DESC'
 	];
 
 	$queryVehicle = new WP_Term_Query($argsVehicle);
