@@ -52,13 +52,33 @@ function Hub_hotel_tabs_template() {
 			$content .= "<section class='hub-grid hub-routes hub-display $vehicleSlug'>";
 
 			foreach ($vehiclePosts as $post) {
+				$routeMaps  = get_field('rute_rutekart', $post);
 				$routeNum   = get_field('rute_nummer', $post);
 				$routeName  = get_field('rute_navn', $post);
 				$routeDesc  = get_field('rute_utdrag', $post);
-				$routeImg   = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'medium');
-				$routeVehicles = get_the_terms($post->ID, 'kjøretøy');
+				$routeImg   = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail');
+				$routeVehicles = get_the_terms($post->ID, 'kjøretøy');				
+				
+				$interactiveBool = false;
+					
+				if ($routeMaps) {
+					foreach ($routeMaps as $routeMap) {
+						if ($routeMap['rute_karttype'] == 'interaktiv') {
+							$interactiveBool = true;
+							break;
+						}
+					}
+				}
 
-				$content .= "<a href='" . get_permalink($post->ID) . "#" . get_post_field( 'post_name', get_post()) . "'>";
+				if ($interactiveBool) {
+					$content .= "<a href='" . get_permalink($post->ID) . "#" . get_post_field( 'post_name', get_post()) . "' class='interactive'>";
+					$content .= "	<div class='hub-ribbon'>";
+					$content .= "		<p class='hub-ribbon-inner'>Interaktiv</p>";
+					$content .= "	</div>";
+				} else {
+					$content .= "<a href='" . get_permalink($post->ID) . "#" . get_post_field( 'post_name', get_post()) . "'>";
+				}
+
 				$content .= "	<img src='$routeImg[0]'/>";
 				$content .= "	<div class='hub-meta'>";
 				$content .= "		<h3>Rute $routeNum: <span>$routeName</span></h3>";

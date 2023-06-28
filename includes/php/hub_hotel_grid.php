@@ -24,7 +24,7 @@ function Hub_hotel_grid_template() {
 			foreach ($posts as $post) {
 				$hotelName = get_field('hotell_navn', $post);
 				$hotelDesc = get_field('hotell_utdrag', $post);
-				$hotelImg  = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'medium');
+				$hotelImg  = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail');
 
 				$content .= "<a href='" . get_permalink($post->ID) . "'>";
 				$content .= "	<img src='$hotelImg[0]'/>";

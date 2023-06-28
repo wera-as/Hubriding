@@ -98,11 +98,19 @@ function add_hub_menu_page()
 }
 add_action('admin_menu', 'add_hub_menu_page');
 
-/**
- * Removes the default post functionality
- */
-function Remove_Default_Posts()
+function get_random_inspiration_quote()
 {
-    remove_menu_page('edit.php');
+    $path_to_json = "https://raw.githubusercontent.com/wera-as/inspirational-quotes-source/main/quotes-new.json";
+
+    $json_content = file_get_contents($path_to_json);
+
+    $array = json_decode($json_content, true);
+
+    $one_item = $array[rand(0, count($array) - 1)];
+
+    $html_output = "&ldquo;<span class='insp_quote_quote'>" . $one_item['quote'] . "</span>&rdquo;<br><span class='insp_quote_author'>" . $one_item['author'] . "</span><br><br><span class='insp_quote_hart'>Made with ♥️ by <a href='https://wera.no/' target='_blank'>Wera AS</a></span>";
+
+    return $html_output;
 }
-add_action('admin_menu', 'Remove_Default_Posts');
+
+add_filter('admin_footer_text', 'get_random_inspiration_quote');

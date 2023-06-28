@@ -1,1 +1,123 @@
 /* This admin file can overwrite the default wordpress admin in backend */
+
+:root {
+    --text-color: #302F2D;
+}
+
+.theme-overlay .theme-screenshots {
+    float: left;
+    margin: 0;
+    width: 55%;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.theme-overlay .screenshot {
+    border: none;
+}
+
+.parent-theme,
+.theme-actions {
+    display: none;
+}
+
+.theme-overlay .current-label {
+    background: #C89E54;
+    color: var(--text-color);
+    font-size: 12px;
+    display: inline-block;
+    padding: 0.5rem 4rem;
+    margin: 0 0 1rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.theme-overlay .theme-version {
+    color: #50575e;
+    font-size: 15px;
+    font-weight: 400;
+    display: block;
+    margin-left: 0;
+    line-height: 1.5;
+}
+
+.theme-overlay .theme-wrap {
+    background: 0 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.theme-overlay .theme-info {
+    background-color: var(--text-color);
+    padding: 2rem;
+    display: inline-block;
+    float: none;
+    z-index: 9;
+}
+
+.theme-author,
+.theme-autoupdate,
+.theme-description,
+.theme-name,
+.theme-version {
+    color: #fff !important;
+}
+
+.theme-author a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.single-theme .theme-overlay .theme-about {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.insp_quote_quote,
+.insp_quote_author,
+.insp_quote_hart {
+    color: var(--text-color);
+}
+
+.insp_quote_quote {
+    font-weight: 400;
+    font-style: italic;
+}
+
+.insp_quote_author {
+    font-weight: 600;
+}
+
+.insp_quote_hart a {
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+    font-weight: 600;
+}
+
+#wpbody-content {
+	padding-bottom: 100px;
+	float: left;
+	width: 100%;
+	overflow: visible;
+}
+
+#wpfooter {
+    min-height: 100px;
+}
+
+#footer-left {
+    padding: 1rem 0;
+    position: relative;
+}

@@ -8,16 +8,17 @@ function Hub_frontpage_template()
 
 	$content .= "<section id='pagepiling'>";
 	$content .= "	<div data-anchor='main' id='main' class='section pp-scrollable' style='background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url($featured_image);'>";
-	$content .= "		<a href='/'><img src='/wp-content/uploads/2023/05/hubriding-logo-w.svg' id='hub-logo' alt='Hubriding logo'/></a>";
-	$content .= "		<h1>Fantastiske kjøreruter</h1>";
-	$content .= "		<p>Hubriding er et konsept der du bor på hotell, nyter nye og spennende kjøreruter hver eneste dag.</p>";
-	$content .= "		<div id='hub-buttons'>";
+	$content .= "		<div class='hub-main-container'>";
+	$content .= "			<a href='/'><img src='/wp-content/uploads/2023/05/hubriding-logo-w.svg' id='hub-logo' alt='Hubriding logo'/></a>";
+	$content .= "			<h1>Fantastiske kjøreruter</h1>";
+	$content .= "			<p>Hubriding er et konsept der du bor på hotell, nyter nye og spennende kjøreruter hver eneste dag.</p>";
+	$content .= "			<div id='hub-buttons'>";
 
 	$argsVehicle = [
 		'taxonomy'    => 'kjøretøy',
 		'numberposts' => -1,
 		'orderby'     => 'count',
-		'order'       => 'DESC'
+		'order'       => 'DESC',
 	];
 
 	$queryVehicle = new WP_Term_Query($argsVehicle);
@@ -27,9 +28,10 @@ function Hub_frontpage_template()
 		}
 	}
 
+	$content .= "			</div>";
+	$content .= "			<a href='/nyheter' id='hub-news'>Nyheter</a>";
+	$content .= "			<a href='https://www.dehistoriske.no/' target='_blank'><img src='/wp-content/uploads/2023/06/de-historiske_logo.svg' id='dh-logo' alt='De Historiske logo'></a>";
 	$content .= "		</div>";
-	$content .= "		<a href='#' id='hub-news'>Nyheter</a>";
-	$content .= "		<a href='https://www.dehistoriske.no/' target='_blank'><img src='/wp-content/uploads/2023/06/de-historiske_logo.svg' id='dh-logo' alt='De Historiske logo'></a>";
 	$content .= "	</div>";
 
 	$queryVehicle = new WP_Term_Query($argsVehicle);
@@ -39,7 +41,7 @@ function Hub_frontpage_template()
 			$image = $image_id['sizes']['large'];
 
 			$content .= "	<div data-anchor='$termVehicle->slug' class='section pp-scrollable $termVehicle->slug' style='background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url($image);'>";
-			$content .= "		<h2>$termVehicle->name</h2>";
+			$content .= "		<h2>Hubriding $termVehicle->name</h2>";
 			$content .= "		<div class='hub-counties'>";
 
 			$argsCounty = [
