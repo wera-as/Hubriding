@@ -1,5 +1,6 @@
-<?php 
- /**
+<?php
+
+/**
  * Plugin Name: Hubriding Functionality
  * Plugin URI: https://wera.no
  * Tested up to: 6.2.2
@@ -36,8 +37,8 @@ include_once __DIR__ . '/includes/post_types/hub_post_type_route.php';
 /**
  * Includes the plugin's Custom taxonomies
  */
-include_once __DIR__ . '/includes/post_types/tax/hub_tax_county.php';
 include_once __DIR__ . '/includes/post_types/tax/hub_tax_vehicle.php';
+include_once __DIR__ . '/includes/post_types/tax/hub_tax_county.php';
 
 function hubriding_cf_load_css()
 {
@@ -59,7 +60,6 @@ function hubriding_cf_load_admin_css()
         [],
         filemtime(plugin_dir_path(__FILE__) .  'includes/css/admin.css')
     );
-    
 }
 add_action('admin_enqueue_scripts', 'hubriding_cf_load_admin_css');
 
@@ -94,21 +94,62 @@ add_action('admin_menu', 'remove_comments');
  */
 function add_hub_menu_page()
 {
-    add_menu_page('Hubriding', 'Hubriding', 'administrator', 'hubriding', '', 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDkuNjEgMTA5LjY0Ij4KICA8cGF0aCBmaWxsPSIjZmZmIiBkPSJtNTUuMzYgODUuODMtLjQyLS41SDMyLjM4Yy0yLjA5IDAtNC4xNi0uNDgtNS41MS0yLjEyLTEuMzctMS42Ni0xLjM2LTMuNzctLjkxLTUuNzRzNS4wNy0yMy4xIDUuMDctMjMuMXYtLjAzbDEuNzgtOC4wNiAxLjk4LTkuMDItLjQyLS41aC0xMi42bC0uMzguMy0zLjY3IDE2LjU3LS42NC41SC43TDAgNTMuMyAxMS42Mi41bC42NC0uNWgxNi4zOGwuNy44My02LjU2IDI5Ljg3LjQyLjVoMTIuNjFsLjM4LS4zTDQyLjg3LjVsLjY0LS41aDE2LjM4bC43LjgzLTYuNjMgMzAuMTR2LjAyTDQzLjMzIDc5LjI3bC40Mi41aDEyLjYybC4zOC0uMyAxMC42NS00OC40LjY0LS41aDE2LjM4bC43LjgzLTUuMTcgMjMuNTkuNDIuNWgyMi41NWMyLjA5IDAgNC4xNi40OCA1LjUxIDIuMTIgMS4zNyAxLjY2IDEuMzYgMy43Ny45MSA1Ljc0di4wMmwtMy4wMSAxMy44OXYuMDRhNi4zNiA2LjM2IDAgMCAxLTEuNjIgMi43MiA3LjggNy44IDAgMCAxLTIuNzkgMS45MmwtLjQxLjE2LS4wNi44NC4zOC4yMWMuNzkuNDQgMS40NCAxLjEgMS44NiAxLjkuNDUuODIuNTUgMS42OC4zMiAyLjU4czAgLjAyIDAgLjAyTDEwMSAxMDEuNDhhMTAuMjYgMTAuMjYgMCAwIDEtMTAuMjcgOC4xNkg1MS4wMmwtLjctLjgzIDUuMDUtMjIuOTZ2LS4wMlptMTkuNTUtOC4wMXYuMDJsLS4zMiAxLjQzLjQyLjVoMTIuNjJsLjM4LS4zIDMuOTctMTcuOTEtLjQyLS41SDc4Ljk0bC0uMzguMy0uMDUuMjMtMy40MyAxNS42MS0uMTYuNjJoLS4wMVptLTEuMzIgNy41Mi0uMzguMy0zLjk3IDE3LjkxLjQyLjVoMTIuNjFsLjM4LS4zIDMuOTctMTcuOTEtLjQyLS41SDczLjU5WiIvPgo8L3N2Zz4=', 6);
+    add_menu_page('Hubriding', 'Hubriding', 'publish_pages', 'hubriding', '', 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDkuNjEgMTA5LjY0Ij4KICA8cGF0aCBmaWxsPSIjZmZmIiBkPSJtNTUuMzYgODUuODMtLjQyLS41SDMyLjM4Yy0yLjA5IDAtNC4xNi0uNDgtNS41MS0yLjEyLTEuMzctMS42Ni0xLjM2LTMuNzctLjkxLTUuNzRzNS4wNy0yMy4xIDUuMDctMjMuMXYtLjAzbDEuNzgtOC4wNiAxLjk4LTkuMDItLjQyLS41aC0xMi42bC0uMzguMy0zLjY3IDE2LjU3LS42NC41SC43TDAgNTMuMyAxMS42Mi41bC42NC0uNWgxNi4zOGwuNy44My02LjU2IDI5Ljg3LjQyLjVoMTIuNjFsLjM4LS4zTDQyLjg3LjVsLjY0LS41aDE2LjM4bC43LjgzLTYuNjMgMzAuMTR2LjAyTDQzLjMzIDc5LjI3bC40Mi41aDEyLjYybC4zOC0uMyAxMC42NS00OC40LjY0LS41aDE2LjM4bC43LjgzLTUuMTcgMjMuNTkuNDIuNWgyMi41NWMyLjA5IDAgNC4xNi40OCA1LjUxIDIuMTIgMS4zNyAxLjY2IDEuMzYgMy43Ny45MSA1Ljc0di4wMmwtMy4wMSAxMy44OXYuMDRhNi4zNiA2LjM2IDAgMCAxLTEuNjIgMi43MiA3LjggNy44IDAgMCAxLTIuNzkgMS45MmwtLjQxLjE2LS4wNi44NC4zOC4yMWMuNzkuNDQgMS40NCAxLjEgMS44NiAxLjkuNDUuODIuNTUgMS42OC4zMiAyLjU4czAgLjAyIDAgLjAyTDEwMSAxMDEuNDhhMTAuMjYgMTAuMjYgMCAwIDEtMTAuMjcgOC4xNkg1MS4wMmwtLjctLjgzIDUuMDUtMjIuOTZ2LS4wMlptMTkuNTUtOC4wMXYuMDJsLS4zMiAxLjQzLjQyLjVoMTIuNjJsLjM4LS4zIDMuOTctMTcuOTEtLjQyLS41SDc4Ljk0bC0uMzguMy0uMDUuMjMtMy40MyAxNS42MS0uMTYuNjJoLS4wMVptLTEuMzIgNy41Mi0uMzguMy0zLjk3IDE3LjkxLjQyLjVoMTIuNjFsLjM4LS4zIDMuOTctMTcuOTEtLjQyLS41SDczLjU5WiIvPgo8L3N2Zz4=', 5);
 }
 add_action('admin_menu', 'add_hub_menu_page');
 
+function editor_remove_menu_items()
+{
+	if (in_array('editor', wp_get_current_user()->roles))
+	{
+		remove_menu_page('tools.php');
+		remove_menu_page('edit-comments.php');
+		remove_menu_page('edit.php?post_type=elementor_library');
+		remove_menu_page('post-new.php?post_type=elementor_library');
+	}
+} add_action('admin_menu', 'editor_remove_menu_items');
+
+function editor_remove_from_admin_bar($wp_admin_bar)
+{
+	if (in_array('editor', wp_get_current_user()->roles))
+	{
+		$wp_admin_bar->remove_node('comments');
+		$wp_admin_bar->remove_node('new-elementor_library');
+	}
+} add_action('admin_bar_menu', 'editor_remove_from_admin_bar', 999);
+
+/**
+ * Adds support for largest possible image size
+ */
+add_image_size('full', 2560, 2560);
+
+/**
+ * Adds random inspirational quotes
+ */
 function get_random_inspiration_quote()
 {
     $path_to_json = "https://raw.githubusercontent.com/wera-as/inspirational-quotes-source/main/quotes-new.json";
+    $fallback_html_output = "<span class='insp_quote_hart'>Made with ♥️ by <a href='https://wera.no/' target='_blank'>Wera AS</a></span>";
 
-    $json_content = file_get_contents($path_to_json);
+    $json_content = @file_get_contents($path_to_json);
+
+    if ($json_content === FALSE) {
+        return $fallback_html_output;
+    }
 
     $array = json_decode($json_content, true);
 
-    $one_item = $array[rand(0, count($array) - 1)];
+    if (json_last_error() != JSON_ERROR_NONE) {
+        return $fallback_html_output;
+    }
 
-    $html_output = "&ldquo;<span class='insp_quote_quote'>" . $one_item['quote'] . "</span>&rdquo;<br><span class='insp_quote_author'>" . $one_item['author'] . "</span><br><br><span class='insp_quote_hart'>Made with ♥️ by <a href='https://wera.no/' target='_blank'>Wera AS</a></span>";
+    if (!is_array($array) || count($array) <= 0) {
+        return $fallback_html_output;
+    }
+
+    $one_item = $array[array_rand($array)];
+
+    $html_output = "&ldquo;<span class='insp_quote_quote'>" . $one_item['quote'] . "</span>&rdquo;<br><span class='insp_quote_author'>" . $one_item['author'] . "</span><br><br>" . $fallback_html_output;
 
     return $html_output;
 }

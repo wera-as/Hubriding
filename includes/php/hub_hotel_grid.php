@@ -8,7 +8,8 @@ function Hub_hotel_grid_template() {
 	foreach ($terms as $term) {
 		$posts = get_posts([
 			'post_type'   => 'hotell',
-			'numberposts' => -1,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
 			'orderby'     => 'title',
 			'order'       => 'ASC',
 			'tax_query'   => [[

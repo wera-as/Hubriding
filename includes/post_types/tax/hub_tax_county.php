@@ -33,7 +33,7 @@ function County_Post_Tax()
         'exclude_from_search'      =>     false,
         'can_export'               =>     true,
         'show_ui'                  =>     true,
-		'show_in_menu'             =>     true,	
+		'show_in_menu'             =>     'hubriding',
         'show_in_rest'             =>     true,
         'menu_position'            =>     5,
         'query_var'                =>     true,

@@ -6,6 +6,7 @@ function Hub_hotel_tabs_template() {
 	$routePosts = get_posts([
 		'post_type'      => 'rute',
 		'posts_per_page' => -1,
+		'post_status'    => 'publish',
 		'meta_key'       => 'rute_nummer',
 		'orderby'        => 'meta_value_num',
 		'order'          => 'ASC',

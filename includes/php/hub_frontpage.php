@@ -4,21 +4,21 @@ function Hub_frontpage_template()
 {
 	$content = NULL;
 
-	$featured_image = wp_get_attachment_url(get_post_thumbnail_id($post->ID), 'large');
+	$featured_image = wp_get_attachment_url(get_post_thumbnail_id($post->ID), 'full');
 
 	$content .= "<section id='pagepiling'>";
 	$content .= "	<div data-anchor='main' id='main' class='section pp-scrollable' style='background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url($featured_image);'>";
 	$content .= "		<div class='hub-main-container'>";
 	$content .= "			<a href='/'><img src='/wp-content/uploads/2023/05/hubriding-logo-w.svg' id='hub-logo' alt='Hubriding logo'/></a>";
-	$content .= "			<h1>Fantastiske kjøreruter</h1>";
-	$content .= "			<p>Hubriding er et konsept der du bor på hotell, nyter nye og spennende kjøreruter hver eneste dag.</p>";
+	$content .= "			<h1>Fantastiske opplevelser</h1>";
+	$content .= "			<p>Hubriding er et konsept der du bor på hotell, nyter nye og spennende ruter hver eneste dag.</p>";
 	$content .= "			<div id='hub-buttons'>";
 
 	$argsVehicle = [
-		'taxonomy'    => 'kjøretøy',
-		'numberposts' => -1,
-		'orderby'     => 'count',
-		'order'       => 'DESC',
+		'taxonomy'       => 'kjøretøy',
+		'posts_per_page' => -1,
+		'orderby'        => 'count',
+		'order'          => 'DESC',
 	];
 
 	$queryVehicle = new WP_Term_Query($argsVehicle);
@@ -38,18 +38,21 @@ function Hub_frontpage_template()
 	if (!empty($queryVehicle->terms)) {
 		foreach ($queryVehicle->terms as $termVehicle) {
 			$image_id = get_field('bilde', $termVehicle);
-			$image = $image_id['sizes']['large'];
+			$image = $image_id['sizes']['full'];
 
 			$content .= "	<div data-anchor='$termVehicle->slug' class='section pp-scrollable $termVehicle->slug' style='background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url($image);'>";
 			$content .= "		<h2>Hubriding $termVehicle->name</h2>";
 			$content .= "		<div class='hub-counties'>";
 
 			$argsCounty = [
-				'post_type'   => 'page',
-				'numberposts' => -1,
-				'orderby'     => 'menu_order',
-				'order'       => 'DESC',
-				'tax_query'   => [
+				'post_type'      => 'page',
+				'posts_per_page' => -1,
+				'post_status'    => 'publish',
+				'orderby'        => [
+					'menu_order' => 'ASC',
+					'rand'      => 'ASC'
+				],
+				'tax_query'      => [
 					[
 						'taxonomy' => 'kjøretøy',
 						'field'    => 'term_id',

@@ -5,7 +5,7 @@ function Route_Post_Type()
 
     $supports = [
         'title',
-		'thumbnail',
+        'thumbnail',
     ];
 
     $labels = [
@@ -13,9 +13,9 @@ function Route_Post_Type()
         'singular_name'               =>     _x('Rute', 'singular'),
         'menu_name'                   =>     _x('Rute', 'admin menu'),
         'name_admin_bar'              =>     _x('Rute', 'admin bar'),
-        'featured_image'              =>     __('Hovedbilde'),
-        'set_featured_image'          =>     __('Sett hovedbilde'),
-        'remove_featured_image'       =>     __('Fjern hovedbilde'),
+        'featured_image'              =>     __('Fremhevet bilde'),
+        'set_featured_image'          =>     __('Bestem fremhevet bilde'),
+        'remove_featured_image'       =>     __('Fjern fremhevet bilde'),
         'add_new'                     =>     _x('Legg til', 'add new'),
         'add_new_item'                =>     __('Legg til ny rute'),
         'new_item'                    =>     __('Ny rute'),

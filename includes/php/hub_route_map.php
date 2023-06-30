@@ -123,7 +123,9 @@ function Hub_route_map_template() {
 			
 			$map_type           = get_sub_field('rute_karttype');
 			$map_hotel          = get_sub_field('rute_tilhorende_hotell');
-			$map_gps_id         = get_sub_field('rute_gps_id');
+			$map_gps_type       = get_sub_field('rute_gps_type');
+			$map_gps_id_route   = get_sub_field('rute_gps_id');
+			$map_gps_id_trip    = get_sub_field('rute_gps_id_trip');
 			$map_google_id      = get_sub_field('rute_google_maps');
 			$map_img_id         = get_sub_field('rute_kartbilde');	
 			$map_interactive_id = get_sub_field('rute_interaktiv');
@@ -131,9 +133,16 @@ function Hub_route_map_template() {
 			$iframe_heigth = get_field('option_rutekart_hoyde','option');
 			if (isset($unique_hotels[$map_hotel->post_name])) {
 				if ($map_type == "ridewithgps") {
-					$map_gps_id_prepend = 'https://ridewithgps.com/embeds?type=route&id=';
-					$map_gps_id_append  = '&metricUnits=true&sampleGraph=true&privacyCode=ib2gC1Q4I6NHoAFG';
-					$content .= "<iframe src='" . $map_gps_id_prepend . $map_gps_id . $map_gps_id_append . "' class='hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
+					$map_gps_id_append        = '&metricUnits=true&sampleGraph=true&privacyCode=ib2gC1Q4I6NHoAFG';
+					$map_gps_id_append_alt    = '&metricUnits=true&sampleGraph=true';
+					if ($map_gps_type == "route") {
+						$map_gps_id_prepend_route = 'https://ridewithgps.com/embeds?type=route&id=';
+						$content .= "<iframe src='" . $map_gps_id_prepend_route . $map_gps_id_route . $map_gps_id_append_alt . "' class='hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
+					}
+					if ($map_gps_type == "trip") {
+						$map_gps_id_prepend_trip  = 'https://ridewithgps.com/embeds?type=trip&id=';
+						$content .= "<iframe src='" . $map_gps_id_prepend_trip . $map_gps_id_trip . $map_gps_id_append_alt . "' class='hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
+					}
 				} else if ($map_type == "googlemaps") {
 					$map_google_id_prepend = 'https://www.google.com/maps/embed?';
 					$content .= "<iframe src='" . $map_google_id_prepend . $map_google_id . "' class='hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
