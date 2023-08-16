@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    vertical-align: baseline;
+    box-sizing: border-box;
+    scrollbar-width: none;
+}
+
+html {
+    height: 100%;
+    text-size-adjust: none;
+}
+
+body {
+    height: 100%;
+    padding: 8rem;
+    color: #fff;
+    font-size: 0.75rem;
+    line-height: 1;
+    font-family: monospace;
+    background: #312F2D;
+}
+
+body > div {
+    display: grid;
+    grid-row-gap: 2rem;
+    justify-items: center;
+}
+
+a {
+    color: #C89E55;
+}
+
+div, select, input {
+    color: #fff !important;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    background: #404040;
+    border-radius: 1.5rem;
+    padding: 1rem;
+}
+
+.dataTables_wrapper .dataTables_filter label {
+    visibility: hidden;
+    font-size: 0;
+}
+
+.dataTables_wrapper .dataTables_filter label:before {
+    visibility: visible;
+    font-size: 0.75rem;
+    content: "Søk:  ";
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    border: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    visibility: visible;
+}
+
+option {
+    color: #000;
+}
+
+table {
+    border: none !important;
+}
+
+table.dataTable thead th,
+table.dataTable tbody td {
+    border: none ;
+    padding: 0.625rem;
+    text-align: left;
+}
+
+table.dataTable tbody td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 12rem;
+}
+
+table.dataTable thead th {
+    background-color: #000;
+}
+
+table.dataTable tbody tr {
+    background-color: #404040;
+}
+
+table.dataTable tbody tr:nth-child(even) {
+    background-color: #312F2D;
+}
+
+table.dataTable thead .sorting {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 16'%3E%3Cpolygon fill='%23fff' points='8 7 0 7 4 0 8 7'/%3E%3Cpolygon fill='%23fff' points='0 9 8 9 4 16 0 9'/%3E%3C/svg%3E");
+    background-size: .5rem 1rem;
+    background-position-x:  calc(100% - 0.625rem);
+}
+
+table.dataTable thead .sorting_asc {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 16'%3E%3Cpolygon fill='%23C89E55' points='8 7 0 7 4 0 8 7'/%3E%3C/svg%3E") !important;
+}
+
+table.dataTable thead .sorting_desc {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 16'%3E%3Cpolygon fill='%23C89E55' points='0 9 8 9 4 16 0 9'/%3E%3C/svg%3E") !important;
+}

@@ -3,10 +3,10 @@
 /**
  * Plugin Name: Hubriding Functionality
  * Plugin URI: https://wera.no
- * Tested up to: 6.2.2
+ * Tested up to: 6.3
  * Requires PHP: 7.4
  * Description: Custom functionality. Essential. Do not touch.
- * Version: 1.0
+ * Version: 1.1
  * Author: Wera AS
  * Author URI: https://wera.no
  **/
@@ -26,7 +26,8 @@ include_once __DIR__ . '/includes/php/hub_hotel_booking.php';
 include_once __DIR__ . '/includes/php/hub_route_tabs.php';
 include_once __DIR__ . '/includes/php/hub_route_map.php';
 include_once __DIR__ . '/includes/php/hub_404_quotes.php';
-include_once __DIR__ . '/includes/php/hub_return_button.php';
+include_once __DIR__ . '/includes/php/hub_dynamic_return.php';
+include_once __DIR__ . '/includes/php/hub_route_visit_counter.php';
 
 /**
  * Includes the plugin's CPT's

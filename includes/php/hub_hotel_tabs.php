@@ -82,7 +82,7 @@ function Hub_hotel_tabs_template() {
 
 				$content .= "	<img src='$routeImg[0]'/>";
 				$content .= "	<div class='hub-meta'>";
-				$content .= "		<h3>Rute $routeNum: <span>$routeName</span></h3>";
+				$content .= "		<h3><strong>Rute $routeNum: </strong>$routeName</h3>";
 				$content .= "		<hr>";
 				$content .= "		<p>$routeDesc</p>";
 				$content .= "	</div>";

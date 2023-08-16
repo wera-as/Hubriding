@@ -16,6 +16,8 @@ The Hubriding concept has been pioneered by Straand Hotel in Vrådal in collabor
 - Enables users to submit GPX files of driving routes.
 - Utilizes iframes to elegantly display the routes on the website.
 - Offers various driving routes including tens of thousands of bends, mountainous terrains, and natural wonders.
+- Automatically logs the number of visits to each route and stores the last visit timestamp.
+- Calculates a rating for each route based on the logarithmic scale of the visit count, which is then displayed on the route page.
 
 ## ⚠️ Limitations
 - Hubriding plugin cannot combine routes.

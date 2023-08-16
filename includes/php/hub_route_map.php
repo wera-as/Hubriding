@@ -74,18 +74,21 @@ function Hub_route_map_template() {
 	$content .= "		<p>Ruten defineres som <strong>$grade_value</strong></p>";
 	$content .= "		<span>$grade_desc</span>";
 	$content .= "	</div>";
-	$content .= "	<div class='hub-route-info-item'>";
-	$content .= "		$time_icon";
-
-	if (floor($time / 60) > 1) {
-		$content .= "	<p>Tid<br><strong>" . sprintf('%d:%02d', floor($time / 60), ($time % 60)) . " timer</strong></p>";
-	} else if (floor($time / 60) == 0) {
-		$content .= "	<p>Tid<br><strong>" . sprintf('%d', ($time % 60)) . " minutter</strong></p>";
-	} else {
-		$content .= "	<p>Tid<br><strong>" . sprintf('%d:%02d', floor($time / 60), ($time % 60)) . " time</strong></p>";
-	}
 	
-	$content .= "	</div>";
+	if (!empty($time)) {
+		$content .= "<div class='hub-route-info-item'>";
+		$content .= "	$time_icon";
+
+		if (floor($time / 60) > 1) {
+			$content .= "<p>Tid<br><strong>" . sprintf('%d:%02d', floor($time / 60), ($time % 60)) . " timer</strong></p>";
+		} else if (floor($time / 60) == 0) {
+			$content .= "<p>Tid<br><strong>" . sprintf('%d', ($time % 60)) . " minutter</strong></p>";
+		} else {
+			$content .= "<p>Tid<br><strong>" . sprintf('%d:%02d', floor($time / 60), ($time % 60)) . " time</strong></p>";
+		}
+		$content .= "</div>";
+	}	
+	
 	$content .= "	<div class='hub-route-info-item'>";
 	$content .= "		<i class='fa-duotone fa-route'></i>";
 	$content .= "		<p>Lengde<br><strong>$distance km</strong></p>";
@@ -109,7 +112,7 @@ function Hub_route_map_template() {
 			
 			$map_hotel = get_sub_field('rute_tilhorende_hotell');
 			
-			if (!empty($map_hotel) && !isset($unique_hotels[$map_hotel->post_name])) {
+			if (!empty($map_hotel) && $map_hotel->post_status === 'publish' && !isset($unique_hotels[$map_hotel->post_name])) {
 				$unique_hotels[$map_hotel->post_name] = $map_hotel->post_name;
 				$content .= "<button class='hub-map-btn' data-map='" . $map_hotel->post_name . "'>" . $map_hotel->post_title . "</button>";
 			}
@@ -144,7 +147,7 @@ function Hub_route_map_template() {
 						$content .= "<iframe src='" . $map_gps_id_prepend_trip . $map_gps_id_trip . $map_gps_id_append_alt . "' class='hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
 					}
 				} else if ($map_type == "googlemaps") {
-					$map_google_id_prepend = 'https://www.google.com/maps/embed?';
+					$map_google_id_prepend = 'https://www.google.com/maps/';
 					$content .= "<iframe src='" . $map_google_id_prepend . $map_google_id . "' class='hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
 				} else if ($map_type == "bilde") {
 					$content .= "<img src='" . $map_img_id['sizes']['large'] . "' class='hub-map-container hub-route-display $map_hotel->post_name'/>";
@@ -177,7 +180,7 @@ function Hub_route_map_template() {
 			$size     = Get_Filesize($map_gps_file);
 			$filesize = FileSizeConvert($size);
 			
-			if ($map_type == "ridewithgps" && !isset($unique_hotels[$map_hotel->post_name])) {
+			if (!empty($map_gps_file) && !isset($unique_hotels[$map_hotel->post_name])) {
 				$unique_hotels[$map_hotel->post_name] = $map_hotel->post_name;
 				$content .= "<div class='hub-route-file-item hub-route-display $map_hotel->post_name'>";
 				$content .= "	<div class='hub-route-file-wrapper'>";
@@ -190,7 +193,7 @@ function Hub_route_map_template() {
 				$content .= "			</div>";
 				$content .= "		</div>";
 				$content .= "	</div>";
-				$content .= "	<a href='$map_gps_file' target='_blank'>Last ned</a>";
+				$content .= "	<a href='$map_gps_file' download=''>Last ned</a>";
 				$content .= "	<p>Det anbefales at GPS er satt til å velge raskeste rute og evt. unngåelser skrudd av for at ruten skal kalkuleres som beskrevet.</p>";
 				$content .= "</div>";
 			}
