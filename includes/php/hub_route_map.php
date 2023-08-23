@@ -2,12 +2,22 @@
 
 require_once __DIR__ . '/resources/bytes_to_human.php';
 require_once __DIR__ . '/resources/get_filesize.php';
+require_once __DIR__ . '/../img/hub_signal_bars.php';
 
-function Hub_route_map_template() {
+
+function Hub_route_map_template()
+{
+
+	error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 	$content = NULL;
 
+	$routeID    =   get_the_ID();
+
 	$content .= "<section class='hub-route'>";
-	
+
 	//META START
 	$popularity_icon = NULL;
 	$time_icon       = NULL;
@@ -16,7 +26,6 @@ function Hub_route_map_template() {
 	$grade           = get_field('rute_ferdighetsniva');
 	$time            = get_field('rute_tid');
 	$distance        = get_field('rute_lengde');
-	$popularity      = get_field('rute_popularitet');
 
 	switch ($grade['value']) {
 		case "easy":
@@ -40,7 +49,7 @@ function Hub_route_map_template() {
 			$grade_desc     =   get_field('option_extreme_route_desc', 'option');
 			break;
 	}
-	
+
 	switch ($time) {
 		case ($time < 120):
 			$time_icon = "<i class='fa-duotone fa-hourglass-start'></i>";
@@ -52,19 +61,72 @@ function Hub_route_map_template() {
 			$time_icon = "<i class='fa-duotone fa-hourglass-end'></i>";
 			break;
 	}
-	
-	switch ($popularity) {
-		case ($popularity >= 1.0 && $popularity <= 2.5):
-			$popularity_icon = "<i class='fa-duotone fa-signal-bars-weak'></i>";
+
+	$rootPath   =   $_SERVER['DOCUMENT_ROOT'];
+	$config     =   require $rootPath . '/../hub_db.php';
+
+	$host       =   $config['db_host'];
+	$db         =   $config['db_name'];
+	$user       =   $config['db_user'];
+	$pass       =   $config['db_pass'];
+	$charset    =   $config['db_charset'];
+
+	$conn = new mysqli($host, $user, $pass, $db);
+
+	if ($conn->connect_error) {
+		die("Connection failed: " . $conn->connect_error);
+	}
+
+	$conn->set_charset($charset);
+
+	// Prepare the query to fetch the entire table
+	$stmt = $conn->prepare("SELECT * FROM wp_hub_route_visitor_count");
+	$stmt->execute();
+	$result = $stmt->get_result();
+
+	// Create an array to store the visits and a variable to store the max views
+	$visits_array = [];
+	$max_views = 0;
+
+	// Loop through the result and populate the visits array
+	while ($row = $result->fetch_assoc()) {
+		$visits_array[$row['PageID']] = $row['Visits'];
+		if ($row['Visits'] > $max_views) {
+			$max_views = $row['Visits'];
+		}
+	}
+
+	// Close the statement and connection
+	$stmt->close();
+	$conn->close();
+
+	// Get the visits for the given route ID
+	if (isset($visits_array[$routeID])) {
+		$visits = $visits_array[$routeID];
+	} else {
+		// If the route ID is not found in the array, set visits to 0
+		$visits = 0.0;
+	}
+
+	// Calculate the rating
+	$rating = round(1 + 9 * (log($visits + 1) / log($max_views + 1)));
+
+
+	switch ($rating) {
+		case ($rating >= 1.0 && $rating <= 2.0):
+			$popularity_icon = HUB_SIGNAL_1_BAR;
 			break;
-		case ($popularity >= 2.6 && $popularity <= 5.0):
-			$popularity_icon = "<i class='fa-duotone fa-signal-bars-fair'></i>";
+		case ($rating >= 2.1 && $rating <= 4.0):
+			$popularity_icon = HUB_SIGNAL_2_BARS;
 			break;
-		case ($popularity >= 5.1 && $popularity <= 7.5):
-			$popularity_icon = "<i class='fa-duotone fa-signal-bars-good'></i>";
+		case ($rating >= 4.1 && $rating <= 6.0):
+			$popularity_icon = HUB_SIGNAL_3_BARS;
 			break;
-		case ($popularity >= 7.6 && $popularity <= 10.0):
-			$popularity_icon = "<i class='fa-duotone fa-signal-bars-strong'></i>";
+		case ($rating >= 6.1 && $rating <= 8.0):
+			$popularity_icon = HUB_SIGNAL_4_BARS;
+			break;
+		case ($rating >= 8.1 && $rating <= 10.0):
+			$popularity_icon = HUB_SIGNAL_FULL_BARS;
 			break;
 	}
 
@@ -74,7 +136,7 @@ function Hub_route_map_template() {
 	$content .= "		<p>Ruten defineres som <strong>$grade_value</strong></p>";
 	$content .= "		<span>$grade_desc</span>";
 	$content .= "	</div>";
-	
+
 	if (!empty($time)) {
 		$content .= "<div class='hub-route-info-item'>";
 		$content .= "	$time_icon";
@@ -87,15 +149,16 @@ function Hub_route_map_template() {
 			$content .= "<p>Tid<br><strong>" . sprintf('%d:%02d', floor($time / 60), ($time % 60)) . " time</strong></p>";
 		}
 		$content .= "</div>";
-	}	
-	
+	}
+
 	$content .= "	<div class='hub-route-info-item'>";
 	$content .= "		<i class='fa-duotone fa-route'></i>";
 	$content .= "		<p>Lengde<br><strong>$distance km</strong></p>";
 	$content .= "	</div>";
 	$content .= "	<div class='hub-route-info-item'>";
 	$content .= 		$popularity_icon;
-	$content .= "		<p>Popularitet<br><strong>$popularity av 10</strong></p>";
+	$content .= "		<p>Popularitet<br><strong>$rating av 10</strong></p>";
+	$content .= "		<span>Regnes ut automatisk</span>";
 	$content .= "	</div>";
 	$content .= "</div>";
 	//META END
@@ -103,37 +166,37 @@ function Hub_route_map_template() {
 	//MAP START
 	if (have_rows('rute_rutekart')) {
 		$unique_hotels = [];
-		
+
 		$content .= "<div class='hub-route-map'>";
 		$content .= "	<div class='hub-route-button-row'>";
-		
+
 		while (have_rows('rute_rutekart')) {
 			the_row();
-			
+
 			$map_hotel = get_sub_field('rute_tilhorende_hotell');
-			
+
 			if (!empty($map_hotel) && $map_hotel->post_status === 'publish' && !isset($unique_hotels[$map_hotel->post_name])) {
 				$unique_hotels[$map_hotel->post_name] = $map_hotel->post_name;
 				$content .= "<button class='hub-map-btn' data-map='" . $map_hotel->post_name . "'>" . $map_hotel->post_title . "</button>";
 			}
 		}
-		
+
 		$content .= "</div>";
-		reset_rows();	
-		
+		reset_rows();
+
 		while (have_rows('rute_rutekart')) {
 			the_row();
-			
+
 			$map_type           = get_sub_field('rute_karttype');
 			$map_hotel          = get_sub_field('rute_tilhorende_hotell');
 			$map_gps_type       = get_sub_field('rute_gps_type');
 			$map_gps_id_route   = get_sub_field('rute_gps_id');
 			$map_gps_id_trip    = get_sub_field('rute_gps_id_trip');
 			$map_google_id      = get_sub_field('rute_google_maps');
-			$map_img_id         = get_sub_field('rute_kartbilde');	
+			$map_img_id         = get_sub_field('rute_kartbilde');
 			$map_interactive_id = get_sub_field('rute_interaktiv');
-			
-			$iframe_heigth = get_field('option_rutekart_hoyde','option');
+
+			$iframe_heigth = get_field('option_rutekart_hoyde', 'option');
 			if (isset($unique_hotels[$map_hotel->post_name])) {
 				if ($map_type == "ridewithgps") {
 					$map_gps_id_append        = '&metricUnits=true&sampleGraph=true&privacyCode=ib2gC1Q4I6NHoAFG';
@@ -151,7 +214,7 @@ function Hub_route_map_template() {
 					$content .= "<iframe src='" . $map_google_id_prepend . $map_google_id . "' class='hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
 				} else if ($map_type == "bilde") {
 					$content .= "<img src='" . $map_img_id['sizes']['large'] . "' class='hub-map-container hub-route-display $map_hotel->post_name'/>";
-				} else if ($map_type == "interaktiv" ) {
+				} else if ($map_type == "interaktiv") {
 					$map_interactive_prepend = "https://sonicmaps.xyz/embed/?u=489&p=";
 					$content .= "<iframe src='" . $map_interactive_prepend . $map_interactive_id . "' class='interactive hub-map-container hub-route-display $map_hotel->post_name'></iframe>";
 				}
@@ -164,7 +227,7 @@ function Hub_route_map_template() {
 
 		//FILE START
 		$content .= "<div class='hub-route-file'>";
-		
+
 		while (have_rows('rute_rutekart')) {
 			the_row();
 
@@ -179,7 +242,7 @@ function Hub_route_map_template() {
 
 			$size     = Get_Filesize($map_gps_file);
 			$filesize = FileSizeConvert($size);
-			
+
 			if (!empty($map_gps_file) && !isset($unique_hotels[$map_hotel->post_name])) {
 				$unique_hotels[$map_hotel->post_name] = $map_hotel->post_name;
 				$content .= "<div class='hub-route-file-item hub-route-display $map_hotel->post_name'>";
@@ -198,15 +261,16 @@ function Hub_route_map_template() {
 				$content .= "</div>";
 			}
 		}
-		
+
 		$map_description = get_field('rute_kartbeskrivelse');
-		
-		$content .= "	<p class='hub-route-map-description'>$map_description</p>";
+
+		$content .= "	<div class='hub-route-map-description'>$map_description</div>";
 		$content .= "</div>";
 		//FILE END
 	}
-	
+
 	$content .= "</section>";
 
 	return $content;
-} add_shortcode("Hub_route_map_template", "Hub_route_map_template");
+}
+add_shortcode("Hub_route_map_template", "Hub_route_map_template");

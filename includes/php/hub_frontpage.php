@@ -31,7 +31,7 @@ function Hub_frontpage_template()
 	$content .= "			</div>";
 	$content .= "			<div class='hub-buttons-front lower'>";
 	$content .= "				<a href='#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjE2NTciLCJ0b2dnbGUiOnRydWV9'>Hva er Hubriding?</a>";
-	$content .= "				<a href='/nyheter'>Gladsaker (kommer)</a>";
+	$content .= "				<a href='/nyheter'>Gladsaker</a>";
 	$content .= "			</div>";
 	$content .= "				<a href='https://www.dehistoriske.no/' target='_blank'><img src='/wp-content/uploads/2023/06/de-historiske_logo.svg' id='dh-logo' alt='De Historiske logo'></a>";
 	$content .= "		</div>";

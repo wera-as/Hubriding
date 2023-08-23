@@ -43,7 +43,7 @@ div, select, input {
     padding: 1rem;
 }
 
-.dataTables_wrapper .dataTables_filter label {
+/*.dataTables_wrapper .dataTables_filter label {
     visibility: hidden;
     font-size: 0;
 }
@@ -52,7 +52,7 @@ div, select, input {
     visibility: visible;
     font-size: 0.75rem;
     content: "Søk:  ";
-}
+}*/
 
 .dataTables_wrapper .dataTables_filter input {
     border: none;
@@ -80,12 +80,12 @@ table.dataTable tbody td {
     text-align: left;
 }
 
-table.dataTable tbody td {
+/*table.dataTable tbody td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 12rem;
-}
+}*/
 
 table.dataTable thead th {
     background-color: #000;
@@ -111,4 +111,49 @@ table.dataTable thead .sorting_asc {
 
 table.dataTable thead .sorting_desc {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 16'%3E%3Cpolygon fill='%23C89E55' points='0 9 8 9 4 16 0 9'/%3E%3C/svg%3E") !important;
+}
+
+.paginate_button {
+    color:#C89E55 !important;
+}
+
+.paginate_button.current, .paginate_button:hover{
+    color:#fff !important;
+    background:none !important;
+    background-color: #C89E55 !important;
+    border:none !important;
+}
+
+.visits {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 2rem 1fr;
+}
+
+.visits .bar {
+    width: 50%;
+    height: 100%;
+    background: #C89E55;
+    border-radius: 6px;
+    /*opacity: 0;*/
+    z-index: -1;
+    transition: width 1s ease, opacity 1s ease;
+}
+
+.country-selector {
+    display: none;
+}
+
+#footer {
+    display: flex;
+    justify-content: space-between; /* Space out the columns equally */
+}
+
+#footer span {
+    flex: 1; /* Make each column take up equal space */
+    display: flex;
+    justify-content: center; /* Horizontally align the content in each column */
+    align-items: center; /* Vertically align the content in each column */
 }

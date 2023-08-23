@@ -95,29 +95,31 @@ add_action('admin_menu', 'remove_comments');
  */
 function add_hub_menu_page()
 {
-    add_menu_page('Hubriding', 'Hubriding', 'publish_pages', 'hubriding', '', 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDkuNjEgMTA5LjY0Ij4KICA8cGF0aCBmaWxsPSIjZmZmIiBkPSJtNTUuMzYgODUuODMtLjQyLS41SDMyLjM4Yy0yLjA5IDAtNC4xNi0uNDgtNS41MS0yLjEyLTEuMzctMS42Ni0xLjM2LTMuNzctLjkxLTUuNzRzNS4wNy0yMy4xIDUuMDctMjMuMXYtLjAzbDEuNzgtOC4wNiAxLjk4LTkuMDItLjQyLS41aC0xMi42bC0uMzguMy0zLjY3IDE2LjU3LS42NC41SC43TDAgNTMuMyAxMS42Mi41bC42NC0uNWgxNi4zOGwuNy44My02LjU2IDI5Ljg3LjQyLjVoMTIuNjFsLjM4LS4zTDQyLjg3LjVsLjY0LS41aDE2LjM4bC43LjgzLTYuNjMgMzAuMTR2LjAyTDQzLjMzIDc5LjI3bC40Mi41aDEyLjYybC4zOC0uMyAxMC42NS00OC40LjY0LS41aDE2LjM4bC43LjgzLTUuMTcgMjMuNTkuNDIuNWgyMi41NWMyLjA5IDAgNC4xNi40OCA1LjUxIDIuMTIgMS4zNyAxLjY2IDEuMzYgMy43Ny45MSA1Ljc0di4wMmwtMy4wMSAxMy44OXYuMDRhNi4zNiA2LjM2IDAgMCAxLTEuNjIgMi43MiA3LjggNy44IDAgMCAxLTIuNzkgMS45MmwtLjQxLjE2LS4wNi44NC4zOC4yMWMuNzkuNDQgMS40NCAxLjEgMS44NiAxLjkuNDUuODIuNTUgMS42OC4zMiAyLjU4czAgLjAyIDAgLjAyTDEwMSAxMDEuNDhhMTAuMjYgMTAuMjYgMCAwIDEtMTAuMjcgOC4xNkg1MS4wMmwtLjctLjgzIDUuMDUtMjIuOTZ2LS4wMlptMTkuNTUtOC4wMXYuMDJsLS4zMiAxLjQzLjQyLjVoMTIuNjJsLjM4LS4zIDMuOTctMTcuOTEtLjQyLS41SDc4Ljk0bC0uMzguMy0uMDUuMjMtMy40MyAxNS42MS0uMTYuNjJoLS4wMVptLTEuMzIgNy41Mi0uMzguMy0zLjk3IDE3LjkxLjQyLjVoMTIuNjFsLjM4LS4zIDMuOTctMTcuOTEtLjQyLS41SDczLjU5WiIvPgo8L3N2Zz4=', 5);
+    require_once __DIR__ . '/includes/img/base64/hub_logo.php';
+
+    add_menu_page('Hubriding', 'Hubriding', 'publish_pages', 'hubriding', '', HUBRIDING_LOGO, 5);
 }
 add_action('admin_menu', 'add_hub_menu_page');
 
 function editor_remove_menu_items()
 {
-	if (in_array('editor', wp_get_current_user()->roles))
-	{
-		remove_menu_page('tools.php');
-		remove_menu_page('edit-comments.php');
-		remove_menu_page('edit.php?post_type=elementor_library');
-		remove_menu_page('post-new.php?post_type=elementor_library');
-	}
-} add_action('admin_menu', 'editor_remove_menu_items');
+    if (in_array('editor', wp_get_current_user()->roles)) {
+        remove_menu_page('tools.php');
+        remove_menu_page('edit-comments.php');
+        remove_menu_page('edit.php?post_type=elementor_library');
+        remove_menu_page('post-new.php?post_type=elementor_library');
+    }
+}
+add_action('admin_menu', 'editor_remove_menu_items');
 
 function editor_remove_from_admin_bar($wp_admin_bar)
 {
-	if (in_array('editor', wp_get_current_user()->roles))
-	{
-		$wp_admin_bar->remove_node('comments');
-		$wp_admin_bar->remove_node('new-elementor_library');
-	}
-} add_action('admin_bar_menu', 'editor_remove_from_admin_bar', 999);
+    if (in_array('editor', wp_get_current_user()->roles)) {
+        $wp_admin_bar->remove_node('comments');
+        $wp_admin_bar->remove_node('new-elementor_library');
+    }
+}
+add_action('admin_bar_menu', 'editor_remove_from_admin_bar', 999);
 
 /**
  * Adds support for largest possible image size
