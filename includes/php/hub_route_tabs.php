@@ -19,6 +19,29 @@ function Hub_route_tabs_template() {
 				'terms'      => $termCounty->term_id,
 			]],
 		]);
+		
+		$filteredPosts = [];
+
+        foreach ($posts as $post) {
+            $routeMaps = get_field('rute_rutekart', $post);
+            $hasPublishedHotel = false;
+
+            if ($routeMaps) {
+                foreach ($routeMaps as $routeMap) {
+                    $associatedHotelID = $routeMap['rute_tilhorende_hotell'];
+                    if (get_post_status($associatedHotelID) == 'publish') {
+                        $hasPublishedHotel = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($hasPublishedHotel) {
+                $filteredPosts[] = $post;
+            }
+        }
+
+        $posts = $filteredPosts;
 
 		if (!empty($posts)) {
 			$termsVehicle = get_terms([

@@ -80,7 +80,11 @@ ini_set('display_errors', 1);
 	$conn->set_charset($charset);
 
 	// Prepare the query to fetch the entire table
-	$stmt = $conn->prepare("SELECT * FROM wp_hub_route_visitor_count");
+	$stmt = $conn->prepare("
+    SELECT v.* FROM wp_hub_route_visitor_count v
+    JOIN wp_posts p ON v.PageID = p.ID
+    WHERE p.post_status = 'publish'
+    ");
 	$stmt->execute();
 	$result = $stmt->get_result();
 
@@ -105,12 +109,31 @@ ini_set('display_errors', 1);
 		$visits = $visits_array[$routeID];
 	} else {
 		// If the route ID is not found in the array, set visits to 0
-		$visits = 0.0;
+		$visits = 0;
 	}
 
-	// Calculate the rating
-	$rating = round(1 + 9 * (log($visits + 1) / log($max_views + 1)));
+	// Calculate the rating (old)
+	//$rating = round(1 + 9 * (log($visits + 1) / log($max_views + 1)));
+	
+	//Calculate the rating
+	function calculatePercentile($visitorCounts, $currentVisitorCount) {
+		sort($visitorCounts);
+		$totalRoutes = count($visitorCounts);
+		$countLessThanCurrent = 0;
 
+		foreach ($visitorCounts as $count) {
+			if ($count < $currentVisitorCount) {
+				$countLessThanCurrent++;
+			}
+		}
+
+		// Calculate percentile rank (not in percentage form)
+		$percentileRank = $countLessThanCurrent / $totalRoutes;
+
+		return (1 + floor($percentileRank * 10)); // This maps the lowest percentiles to the lowest ratings
+	}
+	
+	$rating = calculatePercentile(array_values($visits_array), $visits);
 
 	switch ($rating) {
 		case ($rating >= 1.0 && $rating <= 2.0):

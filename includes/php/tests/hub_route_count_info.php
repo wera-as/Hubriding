@@ -14,6 +14,10 @@
 
     <script>
         jQuery(document).ready(function() {
+            jQuery.fn.dataTable.ext.type.order['customNumeric-pre'] = function(data) {
+                var matches = data.match(/\d+/);
+                return matches ? parseInt(matches[0], 10) : 0;
+            };
             jQuery('table').DataTable({
                 paging: true,
                 "pagingType": "numbers",
@@ -24,6 +28,10 @@
                 order: [
                     [4, 'desc']
                 ],
+                columnDefs: [{
+                    type: 'customNumeric',
+                    targets: 7
+                }],
                 language: {
                     processing: "Behandler...",
                     search: "Søk:",
@@ -57,7 +65,7 @@
     $rootPath   =   $_SERVER['DOCUMENT_ROOT'];
     $config     =   require $rootPath . '/../hub_db.php';
 
-    $date_format =  "d. M, H:i";
+    $date_format =  "d. M Y, H:i";
 
     $host       =   $config['db_host'];
     $db         =   $config['db_name'];
@@ -78,9 +86,13 @@
     $conn->set_charset($charset);
 
     // Fetch all entries from the table
-    $stmt = $conn->prepare("SELECT * FROM wp_hub_route_visitor_count");
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt = $conn->prepare("
+    SELECT v.* FROM wp_hub_route_visitor_count v
+    JOIN wp_posts p ON v.PageID = p.ID
+    WHERE p.post_status = 'publish'
+    ");
+$stmt->execute();
+$result = $stmt->get_result();
 
     $visits = [];
     $total_visits = 0;
@@ -152,7 +164,7 @@
         $percentage = ($row['Visits'] / $total_visits) * 100;
         echo "<td>" . number_format($percentage, 2) . "%</td>";
 
-        $rating = logarithmicRating($row['Visits'], $max_views);
+        $rating = calculatePercentile($visits, $row['Visits']);
         echo "<td>" . $rating . " av 10</td>";
 
         echo "</tr>";
@@ -165,7 +177,7 @@
 
     echo "<div id='footer'>";
     echo "<span class='total_visits'><strong>Totalt $total</strong>&nbsp;besøk</span>";
-    echo "<span class='version'>Versjon: 0.2</span>";
+    echo "<span class='version'>Versjon: 0.3</span>";
     echo "<span class='start_date'>Loggføringen begynte 15.08.2023.</span>";
     echo "</div>";
 
@@ -186,9 +198,26 @@
     }
 
     // Function to calculate rating on a logarithmic scale
-    function logarithmicRating($visits, $maxVisits)
+    //function logarithmicRating($visits, $maxVisits)
+    //{
+    //    return round(1 + 9 * (log($visits + 1) / log($maxVisits + 1)));
+
+    function calculatePercentile($visitorCounts, $currentVisitorCount)
     {
-        return round(1 + 9 * (log($visits + 1) / log($maxVisits + 1)));
+        sort($visitorCounts);
+        $totalRoutes = count($visitorCounts);
+        $countLessThanCurrent = 0;
+
+        foreach ($visitorCounts as $count) {
+            if ($count < $currentVisitorCount) {
+                $countLessThanCurrent++;
+            }
+        }
+
+        // Calculate percentile rank (not in percentage form)
+        $percentileRank = $countLessThanCurrent / $totalRoutes;
+
+        return (1 + floor($percentileRank * 10)); // This maps the lowest percentiles to the lowest ratings
     }
 
     ?>

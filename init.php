@@ -34,6 +34,7 @@ include_once __DIR__ . '/includes/php/hub_route_visit_counter.php';
  */
 include_once __DIR__ . '/includes/post_types/hub_post_type_hotel.php';
 include_once __DIR__ . '/includes/post_types/hub_post_type_route.php';
+include_once __DIR__ . '/includes/post_types/hub_post_type_arrival.php';
 
 /**
  * Includes the plugin's Custom taxonomies
@@ -152,7 +153,13 @@ function get_random_inspiration_quote()
 
     $one_item = $array[array_rand($array)];
 
-    $html_output = "&ldquo;<span class='insp_quote_quote'>" . $one_item['quote'] . "</span>&rdquo;<br><span class='insp_quote_author'>" . $one_item['author'] . "</span><br><br>" . $fallback_html_output;
+    if (isset($one_item['link']) && !empty($one_item['link'])) {
+        $author_html = "<a href='" . $one_item['link'] . "' target='_blank' class='insp_quote_author'>" . $one_item['author'] . "</a>";
+    } else {
+        $author_html = $one_item['author'];
+    }
+
+    $html_output = "&ldquo;<span class='insp_quote_quote'>" . $one_item['quote'] . "</span>&rdquo;<br><span class='insp_quote_author'>" . $author_html . "</span><br><br>" . $fallback_html_output;
 
     return $html_output;
 }
